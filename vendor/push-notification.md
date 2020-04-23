@@ -1,8 +1,10 @@
 
 # Push Notification
 
-**There are three main steps to setting up push notifications:**
+**There are four main steps to setting up push notifications:**
+
 1. getting a user's Expo Push Token
+2. installing [expo-server-sdk-node](https://github.com/expo/expo-server-sdk-node) on the backend
 2. calling Expo's Push API with the token when you want to send a notification
 3. responding to receiving the notification in your app (maybe upon opening, you want to jump to a particular screen that the notification refers to)
 
@@ -38,7 +40,7 @@ new Schema (
 	os_version: String
 })
 ```
-**Customer Schema**
+## Customer Schema
 
 add `customer_device` schema to customer
 
@@ -73,3 +75,28 @@ const CustomerSchema = new Schema(
 
 ```
 
+## Push Notification Object
+
+The push notification object must adhere to the following shape:
+```
+{
+	title: String (required),
+	body: String (required),
+	data: {		// optional
+		title: String,
+		body: String
+	},
+	channel_id: String (required, Android),
+	subtitle: String (optional, iOS)
+}
+```
+
+The `data` field is used if we want to display the notification in our inbox and if we want to display more details about our notification (e.g. promotions and announcements) that the user can view from our app. However, if you opt to exclude `data`, our notification will still be displayed in the notification tray.
+
+## Android Channels
+
+The channel id for is required for Android phones if we want to display the notification. For different purposes, three channels were setup in advance for such tasks:
+
+- General - for general purpose notifications
+- Promotions - for marketing and promotion
+- Transactions - for notifying the user about their ongoing orders
